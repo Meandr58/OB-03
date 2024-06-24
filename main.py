@@ -86,7 +86,7 @@ class Veterinarian:
 # Тестирование кода
 
 # Создание животных
-sparrow = Bird("Орел", 9, "185 см")
+sparrow = Bird("Орел", 9, "188 см")
 lion = Mammal("Лев", 8, "Бежевый")
 snake = Reptile("Питон", 13, "Восточная Азия")
 
