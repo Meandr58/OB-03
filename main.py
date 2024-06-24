@@ -1,3 +1,5 @@
+import pickle
+
 # 1. Создание базового класса Animal
 
 class Animal:
@@ -67,6 +69,22 @@ class Zoo:
         self.staff.append(staff_member)
         print(f"{staff_member.name} принят на работу в зоопарк.")
 
+    def save_to_file(self, filename):
+        with open(filename, 'wb') as file:
+            pickle.dump(self, file)
+        print(f"Информация о зоопарке сохранена в файл {filename}.")
+
+    @staticmethod
+    def load_from_file(filename):
+        try:
+            with open(filename, 'rb') as file:
+                zoo = pickle.load(file)
+            print(f"Информация о зоопарке загружена из файла {filename}.")
+            return zoo
+        except FileNotFoundError:
+            print(f"Файл {filename} не найден. Создается новый зоопарк.")
+            return Zoo()
+
 # 5. Создание классов для сотрудников
 
 class ZooKeeper:
@@ -85,10 +103,23 @@ class Veterinarian:
 
 # Тестирование кода
 
+# Загрузка зоопарка из файла или создание нового
+zoo = Zoo.load_from_file('zoo_data.pkl')
+
 # Создание животных
 sparrow = Bird("Орел", 9, "188 см")
 lion = Mammal("Лев", 8, "Бежевый")
 snake = Reptile("Питон", 13, "Восточная Азия")
+
+# Добавление животных (если они не добавлены ранее)
+if not any(animal.name == sparrow.name for animal in zoo.animals):
+    zoo.add_animal(sparrow)
+
+if not any(animal.name == lion.name for animal in zoo.animals):
+    zoo.add_animal(lion)
+
+if not any(animal.name == snake.name for animal in zoo.animals):
+    zoo.add_animal(snake)
 
 # Вывод всех сведений о животных
 print(sparrow)
@@ -98,6 +129,13 @@ print(snake)
 # Создание сотрудников
 zookeeper = ZooKeeper("Максим Сухов")
 veterinarian = Veterinarian("Антон Попов")
+
+# Добавление сотрудников (если они не добавлены ранее)
+if not any(staff.name == zookeeper.name for staff in zoo.staff):
+    zoo.add_staff(zookeeper)
+
+if not any(staff.name == veterinarian.name for staff in zoo.staff):
+    zoo.add_staff(veterinarian)
 
 # Создание зоопарка и добавление животных и сотрудников
 zoo = Zoo()
@@ -114,3 +152,6 @@ animal_sound(zoo.animals)
 # Использование методов сотрудников
 zookeeper.feed_animal(lion)
 veterinarian.heal_animal(snake)
+
+# Сохранение зоопарка в файл
+zoo.save_to_file('zoo_data.pkl')
